@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  issue_typeorm_db:
+    image: postgres:13
+    container_name: issue_typeorm_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/
+      - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - issue_typeorm_db
+
+  issue_typeorm_back:
+    image: "node:14-alpine"
+    container_name: issue_typeorm_back
+    restart: unless-stopped
+    tty: true
+    working_dir: "/api"
+    ports:
+      - ${BACK_PORT}:${BACK_PORT}
+    volumes:
+      - .:/api:rw,Z
+    depends_on:
+      - issue_typeorm_db
+      - pgadmin
+
+#Volumes
+volumes:
+  db-data:
+    driver: local
+  pgadmin-data:
+    driver: local
