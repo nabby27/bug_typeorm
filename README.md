@@ -4,13 +4,15 @@
 
 GIVEN have many to many relation
 AND have data for one entity but not have relation
-THEN get data with leftJoinandSelect return one object with null properties.
+WHEN get data with leftJoinandSelect
+THEN return one object with null properties.
 
 ## Expected Behavior
 
 GIVEN have many to many relation
 AND have data for one entity but not have relation
-THEN get data with leftJoinandSelect return empty array.
+WHEN get data with leftJoinandSelect
+THEN return empty array.
 
 ## Requirements to Reproduce
 
